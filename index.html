@@ -660,12 +660,19 @@ document.addEventListener('DOMContentLoaded', reveal);
 
 
 <script>
-// --- PAGE LOAD & WELCOME SCREEN ---
-window.addEventListener('load', () => {
-  setTimeout(() => { 
-    document.getElementById('welcomeScreen').classList.add('slide-down'); 
-  }, 2400);
+function hideWelcomeScreen() {
+  const welcome = document.getElementById('welcomeScreen');
+  if (welcome) {
+    welcome.classList.add('slide-down');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(hideWelcomeScreen, 2200);
 });
+
+setTimeout(hideWelcomeScreen, 3000);
+
 
 // --- TYPING EFFECT ---
 const typingTexts = ['AI Systems', 'Embedded Robots', 'Cloud Apps', 'Custom PCBs'];
