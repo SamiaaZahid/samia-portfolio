@@ -336,7 +336,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;back
     <h1>AI & Robotics <span>Developer</span></h1>
     <div class="typing-container">I build <span class="typing-text" id="typing"></span></div>
     <p class="home-description">
-      BS Artificial Intelligence & Robotics student building end-to-end intelligent systems — from embedded hardware and PCB design to AI-powered apps and live cloud deployments.
+      BS Artificial Intelligence & Robotics student building end-to-end intelligent systems, from embedded hardware and PCB design to AI-powered apps and live cloud deployments.
     </p>
     <div class="cta-buttons">
       <a href="#portfolio" class="btn btn-primary"><i class="fas fa-eye"></i> View My Work</a>
@@ -658,11 +658,122 @@ function reveal(){
 window.addEventListener('scroll', reveal);
 document.addEventListener('DOMContentLoaded', reveal);
 
+
+<script>
+// --- PAGE LOAD & WELCOME SCREEN ---
+window.addEventListener('load', () => {
+  setTimeout(() => { 
+    document.getElementById('welcomeScreen').classList.add('slide-down'); 
+  }, 2400);
+});
+
+// --- TYPING EFFECT ---
+const typingTexts = ['AI Systems', 'Embedded Robots', 'Cloud Apps', 'Custom PCBs'];
+let textIndex = 0, charIndex = 0, isDeleting = false;
+const typingEl = document.getElementById('typing');
+
+function handleTyping() {
+  const currentText = typingTexts[textIndex];
+  typingEl.textContent = isDeleting 
+    ? currentText.substring(0, charIndex - 1) 
+    : currentText.substring(0, charIndex + 1);
+    
+  charIndex += isDeleting ? -1 : 1;
+  let typingSpeed = isDeleting ? 50 : 100;
+
+  if (!isDeleting && charIndex === currentText.length) { 
+    typingSpeed = 1800; 
+    isDeleting = true; 
+  } else if (isDeleting && charIndex === 0) { 
+    isDeleting = false; 
+    textIndex = (textIndex + 1) % typingTexts.length; 
+    typingSpeed = 400; 
+  }
+  
+  setTimeout(handleTyping, typingSpeed);
+}
+handleTyping();
+
+// --- NAVBAR SCROLL EFFECT ---
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// --- TAB SWITCHING ---
+function switchTab(event, tabId) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+// --- SCROLL REVEAL ANIMATIONS ---
+function revealOnScroll() {
+  document.querySelectorAll('.reveal').forEach(el => {
+    const top = el.getBoundingClientRect().top;
+    if (top < window.innerHeight - 120) el.classList.add('active');
+  });
+  
+  document.querySelectorAll('.bar-fill').forEach(bar => {
+    const top = bar.getBoundingClientRect().top;
+    if (top < window.innerHeight - 100 && !bar.style.width) {
+      bar.style.width = bar.dataset.w + '%';
+    }
+  });
+}
+window.addEventListener('scroll', revealOnScroll);
+document.addEventListener('DOMContentLoaded', revealOnScroll);
+
+// --- AI CHATBOT LOGIC (CONNECTED TO VERCEL API) ---
 const aiFab = document.getElementById('aiFab');
 const aiPanel = document.getElementById('aiPanel');
 const aiClose = document.getElementById('aiClose');
-aiFab.addEventListener('click', ()=> aiPanel.classList.toggle('open'));
-aiClose.addEventListener('click', ()=> aiPanel.classList.remove('open'));
+const aiBody = document.getElementById('aiBody');
+const chatInput = document.querySelector('.ai-chat-input input');
+const sendBtn = document.querySelector('.ai-chat-input button');
+
+aiFab.addEventListener('click', () => aiPanel.classList.toggle('open'));
+aiClose.addEventListener('click', () => aiPanel.classList.remove('open'));
+
+function appendMessage(text, sender) {
+  const msgDiv = document.createElement('div');
+  msgDiv.className = `ai-msg ${sender}`;
+  msgDiv.textContent = text;
+  aiBody.appendChild(msgDiv);
+  aiBody.scrollTop = aiBody.scrollHeight;
+  return msgDiv;
+}
+
+async function handleSendMessage() {
+  const query = chatInput.value.trim();
+  if (!query) return;
+
+  appendMessage(query, 'user');
+  chatInput.value = '';
+
+  const loadingMsg = appendMessage("Thinking...", 'bot');
+
+  try {
+    // Fetch response from Vercel Backend Function
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: query })
+    });
+
+    const data = await response.json();
+    loadingMsg.textContent = data.reply || "Sorry, no response could be generated.";
+  } catch (error) {
+    console.error('Error connecting to chatbot server:', error);
+    loadingMsg.textContent = "Unable to connect to the server. Please try again later.";
+  }
+}
+
+sendBtn.addEventListener('click', handleSendMessage);
+chatInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') handleSendMessage();
+});
 </script>
-</body>
+</body>  
 </html>
