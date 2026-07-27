@@ -660,20 +660,18 @@ document.addEventListener('DOMContentLoaded', reveal);
 
 
 <script>
-function hideWelcomeScreen() {
+// --- INSTANT WELCOME SCREEN REMOVAL ---
+window.addEventListener('load', () => {
   const welcome = document.getElementById('welcomeScreen');
   if (welcome) {
-    welcome.style.display = 'none'; // Direct screen ko hide kar dega
+    welcome.style.transition = 'opacity 0.5s ease';
+    welcome.style.opacity = '0';
+    setTimeout(() => {
+      welcome.style.display = 'none';
+    }, 500); // Adhe second mein fade out ho kar khatam ho jayega
   }
-}
-
-// Page load hone par run karein
-window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(hideWelcomeScreen, 2200);
 });
 
-// Safety timer (in case DOMContentLoaded miss ho jaye)
-setTimeout(hideWelcomeScreen, 3000);
 
 
 
