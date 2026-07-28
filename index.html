@@ -141,12 +141,81 @@ section{padding:6rem 5%;}
 @keyframes lanyardDrop{0%{transform:translateY(-120vh) rotate(0deg);opacity:0;}50%{opacity:1;}70%{transform:translateY(15px);}85%{transform:translateY(-8px);}100%{transform:translateY(0);opacity:1;}}
 @keyframes lanyardSway{0%{transform:rotate(0);}25%{transform:rotate(3deg);}50%{transform:rotate(0);}75%{transform:rotate(-3deg);}100%{transform:rotate(0);}}
 
-/* SKILLS TICKER */
-.ticker-container{width:100%;overflow:hidden;background:rgba(0,217,255,.05);border-top:1px solid rgba(0,217,255,.2);border-bottom:1px solid rgba(0,217,255,.2);padding:.8rem 0;margin-top:3rem;}
-.ticker-wrapper{display:flex;width:200%;animation:ticker 22s linear infinite;will-change:transform;}
-.ticker-item{display:flex;align-items:center;gap:2rem;white-space:nowrap;font-family:'Fira Code',monospace;font-size:.92rem;color:var(--accent-primary);padding-right:2rem;}
-.ticker-item span{color:#fff;}
-@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+/* MULTI-ROW MARQUEE SKILLS STYLING (MATCHING REFERENCE IMAGE) */
+#skills {
+  padding: 6rem 0;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+.skills-marquee-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  margin-top: 2rem;
+}
+.skills-marquee-wrapper::before,
+.skills-marquee-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 150px;
+  z-index: 10;
+  pointer-events: none;
+}
+.skills-marquee-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-primary), transparent);
+}
+.skills-marquee-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-primary), transparent);
+}
+.marquee-row {
+  display: flex;
+  width: max-content;
+  gap: 1.2rem;
+  will-change: transform;
+}
+.marquee-row.rtl {
+  animation: scrollRTL 35s linear infinite;
+}
+.marquee-row.ltr {
+  animation: scrollLTR 35s linear infinite;
+}
+@keyframes scrollRTL {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes scrollLTR {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.skill-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .75rem 1.4rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 50px;
+  color: #fff;
+  font-size: .95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(0,0,0,.3);
+  transition: border-color .3s, transform .3s;
+}
+.skill-pill:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-3px);
+}
+.skill-pill i {
+  font-size: 1.1rem;
+  color: var(--accent-primary);
+}
 
 /* PROJECTS TABS */
 .portfolio-tabs{display:flex;justify-content:center;gap:1rem;margin-bottom:3rem;flex-wrap:wrap;}
@@ -170,22 +239,6 @@ section{padding:6rem 5%;}
 .project-content p{color:var(--text-secondary);font-size:.88rem;margin-bottom:.9rem;}
 .project-tags{display:flex;gap:.5rem;flex-wrap:wrap;}
 .tag{padding:.28rem .75rem;background:rgba(0,217,255,.1);color:var(--accent-primary);border-radius:50px;font-size:.75rem;font-weight:500;}
-
-/* SKILLS */
-.skills-grid-container{max-width:950px;margin:0 auto 3.5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;}
-.skill-icon-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:16px;padding:1.8rem 1.2rem;
-  display:flex;flex-direction:column;align-items:center;gap:.8rem;transition:.3s;min-height:150px;justify-content:center;will-change:transform;}
-.skill-icon-card:hover{transform:translateY(-8px);border-color:transparent;box-shadow:0 20px 40px rgba(0,217,255,.3);}
-.skill-icon-card i{font-size:2.4rem;color:var(--accent-primary);}
-.skill-name-label{font-size:.95rem;font-weight:600;color:var(--text-secondary);text-align:center;}
-.skill-icon-card:hover .skill-name-label{color:#fff;}
-.skill-tags-small{font-size:.72rem;color:var(--text-muted);text-align:center;line-height:1.5;}
-
-.bars-wrap{max-width:700px;margin:0 auto;}
-.bar-row{margin-bottom:1.1rem;}
-.bar-label{display:flex;justify-content:space-between;font-size:.88rem;color:var(--text-secondary);margin-bottom:.4rem;}
-.bar-track{height:8px;background:var(--bg-card);border-radius:6px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:6px;background:var(--accent-gradient);width:0;transition:width 1.4s cubic-bezier(0.16, 1, 0.3, 1);}
 
 /* CERTS */
 .certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.6rem;max-width:1250px;margin:0 auto;}
@@ -279,7 +332,6 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;back
   #home{grid-template-columns:1fr;} .home-lanyard-wrapper{position:relative;right:auto;top:auto;margin:0 auto 2rem;order:-1;display:flex;}
   .about-container{grid-template-columns:1fr;} .about-image-wrapper{order:-1;}
   .contact-grid{grid-template-columns:1fr;}
-  .skills-grid-container{grid-template-columns:repeat(2,1fr);}
   .ai-chat-panel{right:16px;width:90vw;}
 }
 </style>
@@ -363,36 +415,66 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;back
   </div>
 </section>
 
+<!-- UPDATED SKILLS SECTION WITH MULTI-ROW INFINITE MARQUEE -->
 <section id="skills">
-  <div class="section-header reveal"><h2>Skills & Expertise</h2><p>Software development, embedded systems, and cloud infrastructure</p></div>
-  <div class="skills-grid-container reveal">
-    <div class="skill-icon-card"><i class="fab fa-python"></i><div class="skill-name-label">Programming</div><div class="skill-tags-small">Python · C++ · Embedded C · SQL</div></div>
-    <div class="skill-icon-card"><i class="fas fa-brain"></i><div class="skill-name-label">AI & ML</div><div class="skill-tags-small">ML Basics · Gemini API · Prompting</div></div>
-    <div class="skill-icon-card"><i class="fas fa-chart-line"></i><div class="skill-name-label">Data Viz</div><div class="skill-tags-small">Streamlit · Plotly · Matplotlib</div></div>
-    <div class="skill-icon-card"><i class="fas fa-microchip"></i><div class="skill-name-label">Embedded</div><div class="skill-tags-small">Arduino · ESP32 · Sensors · Servos</div></div>
-    <div class="skill-icon-card"><i class="fas fa-layer-group"></i><div class="skill-name-label">PCB & Electronics</div><div class="skill-tags-small">PCB Design · Schematic Layout · Power Electronics</div></div>
-    <div class="skill-icon-card"><i class="fab fa-aws"></i><div class="skill-name-label">Linux & Cloud</div><div class="skill-tags-small">Ubuntu · Apache2 · AWS EC2 · UFW / SSH</div></div>
+  <div class="section-header reveal">
+    <h2>SKILLS</h2>
+    <p>Professional tech stack and development tools</p>
   </div>
-  <div class="bars-wrap reveal">
-    <div class="bar-row"><div class="bar-label"><span>Arduino & Embedded C/C++</span><span>100%</span></div><div class="bar-track"><div class="bar-fill" data-w="100"></div></div></div>
-    <div class="bar-row"><div class="bar-label"><span>Electronics & PCB Design</span><span>88%</span></div><div class="bar-track"><div class="bar-fill" data-w="88"></div></div></div>
-    <div class="bar-row"><div class="bar-label"><span>Python & Data Viz</span><span>85%</span></div><div class="bar-track"><div class="bar-fill" data-w="85"></div></div></div>
-    <div class="bar-row"><div class="bar-label"><span>C++ & OOP</span><span>84%</span></div><div class="bar-track"><div class="bar-fill" data-w="84"></div></div></div>
-    <div class="bar-row"><div class="bar-label"><span>Linux Server Admin & AWS EC2</span><span>82%</span></div><div class="bar-track"><div class="bar-fill" data-w="82"></div></div></div>
-  </div>
+  
+  <div class="skills-marquee-wrapper reveal">
+    <!-- Row 1: Left to Right -->
+    <div class="marquee-row ltr">
+      <div class="skill-pill"><i class="fab fa-html5"></i> HTML5</div>
+      <div class="skill-pill"><i class="fab fa-css3-alt"></i> CSS3</div>
+      <div class="skill-pill"><i class="fab fa-js"></i> JavaScript</div>
+      <div class="skill-pill"><i class="fab fa-python"></i> Python</div>
+      <div class="skill-pill"><i class="fas fa-code"></i> C++</div>
+      <div class="skill-pill"><i class="fas fa-database"></i> SQL</div>
+      <div class="skill-pill"><i class="fab fa-react"></i> React</div>
+      <div class="skill-pill"><i class="fab fa-node-js"></i> Node.js</div>
+      <div class="skill-pill"><i class="fab fa-git-alt"></i> Git</div>
+      <div class="skill-pill"><i class="fab fa-github"></i> GitHub</div>
+      <div class="skill-pill"><i class="fab fa-figma"></i> Figma</div>
+      <div class="skill-pill"><i class="fas fa-fire"></i> Firebase</div>
+      <!-- Duplicate for infinite looping effect -->
+      <div class="skill-pill"><i class="fab fa-html5"></i> HTML5</div>
+      <div class="skill-pill"><i class="fab fa-css3-alt"></i> CSS3</div>
+      <div class="skill-pill"><i class="fab fa-js"></i> JavaScript</div>
+      <div class="skill-pill"><i class="fab fa-python"></i> Python</div>
+      <div class="skill-pill"><i class="fas fa-code"></i> C++</div>
+      <div class="skill-pill"><i class="fas fa-database"></i> SQL</div>
+      <div class="skill-pill"><i class="fab fa-react"></i> React</div>
+      <div class="skill-pill"><i class="fab fa-node-js"></i> Node.js</div>
+      <div class="skill-pill"><i class="fab fa-git-alt"></i> Git</div>
+      <div class="skill-pill"><i class="fab fa-github"></i> GitHub</div>
+      <div class="skill-pill"><i class="fab fa-figma"></i> Figma</div>
+      <div class="skill-pill"><i class="fas fa-fire"></i> Firebase</div>
+    </div>
 
-  <div class="ticker-container reveal">
-    <div class="ticker-wrapper">
-      <div class="ticker-item"><i class="fas fa-code"></i> Python & C++ Development <span>|</span></div>
-      <div class="ticker-item"><i class="fas fa-microchip"></i> Embedded Systems & PCB Design <span>|</span></div>
-      <div class="ticker-item"><i class="fas fa-cloud"></i> AWS Cloud & Ubuntu Server <span>|</span></div>
-      <div class="ticker-item"><i class="fas fa-robot"></i> AI Speech & Gemini API Integrations <span>|</span></div>
-      <div class="ticker-item"><i class="fas fa-chart-pie"></i> Streamlit & Plotly Visualizations <span>|</span></div>
-      <div class="ticker-item"><i class="fas fa-code"></i> Python & C++ Development <span>|</span></div>
-      <div class="ticker-item"><i class="fas fa-microchip"></i> Embedded Systems & PCB Design <span>|</span></div>
-      <div class="ticker-item"><i class="fas fa-cloud"></i> AWS Cloud & Ubuntu Server <span>|</span></div>
-      <div class="ticker-item"><i class="fas fa-robot"></i> AI Speech & Gemini API Integrations <span>|</span></div>
-      <div class="ticker-item"><i class="fas fa-chart-pie"></i> Streamlit & Plotly Visualizations <span>|</span></div>
+    <!-- Row 2: Right to Left -->
+    <div class="marquee-row rtl">
+      <div class="skill-pill"><i class="fab fa-docker"></i> Docker</div>
+      <div class="skill-pill"><i class="fab fa-aws"></i> AWS EC2</div>
+      <div class="skill-pill"><i class="fab fa-linux"></i> Ubuntu Linux</div>
+      <div class="skill-pill"><i class="fas fa-microchip"></i> Arduino</div>
+      <div class="skill-pill"><i class="fas fa-robot"></i> Robotics API</div>
+      <div class="skill-pill"><i class="fas fa-chart-line"></i> Streamlit</div>
+      <div class="skill-pill"><i class="fas fa-table"></i> Pandas</div>
+      <div class="skill-pill"><i class="fas fa-brain"></i> Machine Learning</div>
+      <div class="skill-pill"><i class="fas fa-network-wired"></i> Embedded C</div>
+      <div class="skill-pill"><i class="fas fa-bolt"></i> Circuit Design</div>
+      <!-- Duplicate for infinite looping effect -->
+      <div class="skill-pill"><i class="fab fa-docker"></i> Docker</div>
+      <div class="skill-pill"><i class="fab fa-aws"></i> AWS EC2</div>
+      <div class="skill-pill"><i class="fab fa-linux"></i> Ubuntu Linux</div>
+      <div class="skill-pill"><i class="fas fa-microchip"></i> Arduino</div>
+      <div class="skill-pill"><i class="fas fa-robot"></i> Robotics API</div>
+      <div class="skill-pill"><i class="fas fa-chart-line"></i> Streamlit</div>
+      <div class="skill-pill"><i class="fas fa-table"></i> Pandas</div>
+      <div class="skill-pill"><i class="fas fa-brain"></i> Machine Learning</div>
+      <div class="skill-pill"><i class="fas fa-network-wired"></i> Embedded C</div>
+      <div class="skill-pill"><i class="fas fa-bolt"></i> Circuit Design</div>
     </div>
   </div>
 </section>
@@ -486,23 +568,13 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;back
   </div>
 
   <div id="skillsTab" class="tab-content">
-    <div class="skills-grid-container">
-      <div class="skill-icon-card"><i class="fab fa-python"></i><div class="skill-name-label">Python</div></div>
-      <div class="skill-icon-card"><i class="fas fa-code"></i><div class="skill-name-label">C++</div></div>
-      <div class="skill-icon-card"><i class="fab fa-html5"></i><div class="skill-name-label">HTML</div></div>
-      <div class="skill-icon-card"><i class="fab fa-css3-alt"></i><div class="skill-name-label">CSS</div></div>
-      <div class="skill-icon-card"><i class="fab fa-js"></i><div class="skill-name-label">JavaScript</div></div>
-      <div class="skill-icon-card"><i class="fas fa-brain"></i><div class="skill-name-label">ML</div></div>
-      <div class="skill-icon-card"><i class="fas fa-table"></i><div class="skill-name-label">Pandas</div></div>
-      <div class="skill-icon-card"><i class="fas fa-calculator"></i><div class="skill-name-label">NumPy</div></div>
-      <div class="skill-icon-card"><i class="fas fa-chart-bar"></i><div class="skill-name-label">Streamlit</div></div>
-      <div class="skill-icon-card"><i class="fas fa-cubes"></i><div class="skill-name-label">Gradio</div></div>
-      <div class="skill-icon-card"><i class="fab fa-git-alt"></i><div class="skill-name-label">Git</div></div>
-      <div class="skill-icon-card"><i class="fab fa-github"></i><div class="skill-name-label">GitHub</div></div>
-      <div class="skill-icon-card"><i class="fab fa-linux"></i><div class="skill-name-label">Linux</div></div>
-      <div class="skill-icon-card"><i class="fas fa-microchip"></i><div class="skill-name-label">Arduino</div></div>
-      <div class="skill-icon-card"><i class="fas fa-robot"></i><div class="skill-name-label">Robotics</div></div>
-      <div class="skill-icon-card"><i class="fas fa-brain"></i><div class="skill-name-label">AI</div></div>
+    <div class="projects-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); text-align: center;">
+      <div class="project-card reveal" style="padding: 1.5rem;"><i class="fab fa-python" style="font-size: 2.5rem; color: var(--accent-primary); margin-bottom: .5rem;">​</i><h4>Python</h4></div>
+      <div class="project-card reveal" style="padding: 1.5rem;"><i class="fas fa-code" style="font-size: 2.5rem; color: var(--accent-primary); margin-bottom: .5rem;">​</i><h4>C++</h4></div>
+      <div class="project-card reveal" style="padding: 1.5rem;"><i class="fab fa-html5" style="font-size: 2.5rem; color: var(--accent-primary); margin-bottom: .5rem;">​</i><h4>HTML5</h4></div>
+      <div class="project-card reveal" style="padding: 1.5rem;"><i class="fab fa-css3-alt" style="font-size: 2.5rem; color: var(--accent-primary); margin-bottom: .5rem;">​</i><h4>CSS3</h4></div>
+      <div class="project-card reveal" style="padding: 1.5rem;"><i class="fab fa-js" style="font-size: 2.5rem; color: var(--accent-primary); margin-bottom: .5rem;">​</i><h4>JavaScript</h4></div>
+      <div class="project-card reveal" style="padding: 1.5rem;"><i class="fas fa-brain" style="font-size: 2.5rem; color: var(--accent-primary); margin-bottom: .5rem;">​</i><h4>ML</h4></div>
     </div>
   </div>
 </section>
@@ -671,13 +743,6 @@ function revealOnScroll() {
     const top = el.getBoundingClientRect().top;
     if (top < window.innerHeight - 120) el.classList.add('active');
   });
-  
-  document.querySelectorAll('.bar-fill').forEach(bar => {
-    const top = bar.getBoundingClientRect().top;
-    if (top < window.innerHeight - 100 && !bar.style.width) {
-      bar.style.width = bar.dataset.w + '%';
-    }
-  });
 }
 window.addEventListener('scroll', revealOnScroll);
 document.addEventListener('DOMContentLoaded', revealOnScroll);
@@ -735,5 +800,5 @@ if(sendBtn && chatInput) {
   });
 }
 </script>
-</body>  
+</body>
 </html>
