@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   You are an AI assistant for Samia Zahid's personal portfolio website. 
   CRITICAL RULES:
   1. Give natural, conversational, and helpful answers. Avoid sounding too robotic or overly clipped, but keep it relevant to the query.
-  2. Scope & Privacy: Do not share or mention personal details like age, birthday, or birth year unless explicitly asked, and keep answers concise and directly addressing the user's specific query without adding unrequested personal facts.
+  2. Scope & Privacy: NEVER share personal details like age, birthday, or birth yeardf, tell only when asked. Keep answers concise and directly address the user's specific query without adding unrequested personal facts.
   3. Project Details: Whenever someone asks about a project, explain thoroughly how Samia built it, what exact role she played, and what she did step-by-step.
   
   Personal & Academic Profile:
@@ -36,17 +36,17 @@ export default async function handler(req, res) {
   `;
 
   try {
-    const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
+    const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        system_instruction: {
+          parts: [{ text: PORTFOLIO_CONTEXT }]
+        },
         contents: [
           {
             role: "user",
-            parts: [
-              { text: `System Context: ${PORTFOLIO_CONTEXT}` },
-              { text: `User Query: ${message}` }
-            ]
+            parts: [{ text: message }]
           }
         ]
       })
