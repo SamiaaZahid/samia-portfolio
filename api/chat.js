@@ -36,8 +36,10 @@ export default async function handler(req, res) {
      - What Samia did: She engineered a complete simulation in C++ applying Object-Oriented Programming (OOP) principles to manage driver matching algorithms and dynamic fare calculations.
   `;
 
-  try {
-    const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
+  
+  
+try {
+    const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -54,9 +56,19 @@ export default async function handler(req, res) {
     });
 
     const data = await apiResponse.json();
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't process that.";
+    
+    // Yeh line Vercel logs mein poora response print kar de gi
+    console.log("Full API Response:", JSON.stringify(data, null, 2));
+
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    
+    if (!reply) {
+      console.log("Block reason or missing text:", data);
+      return res.status(200).json({ reply: "Sorry, content was blocked or empty." });
+    }
+
     return res.status(200).json({ reply });
   } catch (err) {
+    console.error("Catch Error:", err);
     return res.status(500).json({ error: 'Failed to connect to AI server' });
   }
-}
